@@ -1,91 +1,56 @@
-/*
-Create classes representing a zoo management system.
-    Create a class "Animal" with these attributes:
-        name (String)
-        age (int)
-        species (a const string initialized via constructor, representing a final field)
-        a Diet object 
-        a Habitat object
-    Include these functions of an animal
-        makeSound();
-        eat();
-    Provide a construct in "Animal class that initializes name, age, species, diet and habitat with "this" pointer
-    Create two subclasses of Animal (Lion, Elephant, Dog)
-    Instantiate at least two of each animal type (Two lions, two dogs)
-
-Create a Zoo Collection using vector<Animal*> to store animals
-Add each animal to the collection
-Create a function "makeAllAnimalsSound()" to iterate through the zoo and call makeSound() for each animal
-In the Animal class, declare a final method "displayInfo()" that prints out all of the animals attributes
-
-Create a Diet class with an attribute and an appropriate getter
-Same for Habitat
-
-Resulting Final Code Should
-    Define the class Animal with required attributes, constructor, and virtual methods
-    Create Diet and Habitat classes included as member variables in Animal Class
-    Implement the Lion and Elephant classes, ensuring the implement the virtual functions
-    use vector<Animal*> to manage the zoo
-    In the main() function:
-        Instantiate animals of different types
-        Add them to the zoo collection
-        call "makeAllAnimalsSound()" to demonstrate polymorphism
-        Call displayInfo() on each animal to demonstrate use of the final method and display the has-a data
-*/
-
-#include <iostream>
+#include <iostream>                 //Include libraries
 #include <string>
 #include <vector>
-using namespace std;
+using namespace std;                //Automatically using std::, allowing for simpler more understandable code
 
-class Diet {
+class Diet {                        //Create Diet Class
     public:
     string diet;
-    Diet () {
+    Diet () {                       //Creates Diet default value
         diet = "Unknown";
     }
-    Diet (const string& diet) {
+    Diet (const string& diet) {       //Adds availability to enter custom diets, as defined in the Animal class
         this->diet = diet;
     }
 };
 
-class Habitat {
+class Habitat {                     //Create Habitat Class
     public:
     string habitat;
-    Habitat() {
+    Habitat() {                         //Habitat default
         habitat = "Unknown";
     }
-    Habitat (const string& habitat) {
+    Habitat (const string& habitat) {       //Adds availability to enter custom habitat, as defined in the Animal class
         this->habitat = habitat;
     }
 
 };
 
-class Animal {
-    public:
-    string species;
+class Animal {              //Define Animal Class
+    public:                 //Everything in the class stays public
+    string species;         //Create Animal attributes 
     string name;
     int age;
     Diet diet;
     Habitat habitat;
-    Animal(const string name, const string& species, int age, const string& diet, const string& habitat) {
-        this->species = species;
-        this->name = name;
+    Animal(const string name, const string& species, int age, const string& diet, const string& habitat) {      //Animal constructor; also 
+        this->species = species;                                                  //providing template for how to enter Animal information
+        this->name = name;                          //Assigns entered Animal values from the constructor to actual member variables in Animal class
         this->age = age;
         this->diet = Diet(diet);
         this->habitat = Habitat(habitat);
     }
-    virtual void makeSound(){
+    virtual void makeSound(){                       //Default Animal 'makeSound' function, virtual to allow polymorphism
         cout << "This Animal Makes a sound.";
 
     };
-    virtual void eat(){
+    virtual void eat(){                             //Default Animal 'eat' function, virtual to allow polymorphism
         cout << "This Animal Eats.";
     };
 
-    void displayInfo(){
-        cout << "Name: " << name << endl;
-        cout << "Species: " << species << endl;
+    virtual void displayInfo() final {              //'displayInfo()' function to display an Animal object's different attributes
+        cout << "Name: " << name << endl;           //Final to avoid confusion, and to provide consistent output formats from
+        cout << "Species: " << species << endl;     //Animal type objects
         cout << "Age: " << age << endl;
         cout << "Diet: " << Animal::diet.diet << endl;
         cout << "Habitat: " << Animal::habitat.habitat << endl;
@@ -94,67 +59,53 @@ class Animal {
 
 };
 
-class Seal : public Animal{
+class Seal : public Animal{         //Create Seal class, inheriting from Animal
     public:
-    Seal(const string& name, const string& species, int age, const string& diet, const string& habitat) 
-        : Animal(name, species, age, diet, habitat){}
-    
-    void makeSound() override {
+    Seal(const string& name, const string& species, int age, const string& diet, const string& habitat)     //Create Seal constructor, 'inheriting' the same format
+        : Animal(name, species, age, diet, habitat){}                                                       //as Animal class objects
+
+    void makeSound() override {                       //Defines and overrides 'makeSound' function in the Animal class, ensuring the seal sound is used
         cout << "Arf! Arf!" << endl;
     }
-    void eat() override {
+    void eat() override {                             //Defines and overrides 'eat' function in the Animal class, ensuring the Seal eating is used
         cout << name << " Eats: " << Seal::diet.diet << endl;
     }
 };
 
-class Quaker : public Animal{
+class Bird : public Animal{          //Create Quaker class, inheriting from Animal
     public:
-    Quaker(const string& name, const string& species, int age, const string& diet, const string& habitat)
-        : Animal(name, species, age, diet, habitat){}
+    Bird(const string& name, const string& species, int age, const string& diet, const string& habitat)   //Create Quaker constructor, 'inheriting' the same format
+        : Animal(name, species, age, diet, habitat){}                                                       //as Animal class objects
 
-    void makeSound() override {
+    void makeSound() override {         //Defines and overrides 'makeSound' function in the Animal class, ensuring the Quaker sound is made
         cout << "Tweet! Tweet!" << endl;
     }
     
-    void eat() override {
+    void eat() override {               //Defines and overrides 'eat' function in the Animal class, ensuring the Quaker eating effect is used
         cout << name << " Eats seeds." << endl;
     }
 };
 
-vector<Animal*> animalList;
+vector<Animal*> animalList;         //Create the vector containing the Animals in the Zoo
 
-void makeAllAnimalSound(){
+void makeAllAnimalSound(){          //Function for making all of the animals sound individually
     for (Animal* animal : animalList){
         animal->makeSound();
     }
 }
 
 int main() {
-    Seal mySeal("Sammy", "Seal", 2, "Mainly fish, but Sammy enjoys oranges as well.", "Ocean");
-    Quaker myQuaker("Sunny", "Bird", 5, "Seeds", "Jungle");
-    animalList.push_back(&mySeal);
-    animalList.push_back(&myQuaker);
+    Seal mySeal("Sammy", "Harbor Seal", 2, "Fish, Crustaceans, Mollusks, and Squid", "North Atlantic & Pacific Oceans");   //Creates two of each animal type
+    Bird Quaker("Sunny", "Albino Quaker", 5, "Fruits, nuts, and Seeds", "Open Savabnnas, Palm Groves, Scrub Forests");
+    Seal greySeal("Sally", "Grey Seal", 3, "Fish, Sand Eels, Cod", "North Atlantic Ocean");
+    Bird Macaw("Simon", "Hyacinth Macaw", 1, "Palm Nuts, Fruits, Nectar, Other Vegetables", "Palm Swamps and Flooded Grasslands");
+    animalList.push_back(&mySeal);                          //Adds animals to the Zoo (animalList vector)
+    animalList.push_back(&Quaker);
+    animalList.push_back(&greySeal);
+    animalList.push_back(&Macaw);
+    Macaw.displayInfo();                                //Displays information for each animal when called
     mySeal.displayInfo();
-    myQuaker.displayInfo();
-    makeAllAnimalSound();
+    greySeal.displayInfo();
+    Quaker.displayInfo();
+    makeAllAnimalSound();                               //Sounds all of the animals individually as they appear int animalList vector
 }
-
-
-
-
-
-
-
-
-
-
-
-    /*cout << myAnimal.species << endl;
-    cout << myAnimal.name << endl;
-    cout << myAnimal.diet.diet << endl;
-    cout << myAnimal.age << endl;
-    cout << myAnimal.habitat.habitat << endl;*/
-
-
-
-

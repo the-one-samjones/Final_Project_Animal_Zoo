@@ -56,7 +56,6 @@ class Animal {              //Define Animal Class
         cout << "Habitat: " << Animal::habitat.habitat << endl;
         cout << endl;
     }
-
 };
 
 class Seal : public Animal{         //Create Seal class, inheriting from Animal
